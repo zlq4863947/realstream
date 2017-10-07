@@ -4,6 +4,7 @@ import * as util from 'util';
 import { Log } from 'ns-common';
 
 const PUBNUB = require('pubnub');
+Log.init(Log.category.system, Log.level.ALL, 'prinub');
 
 class Grant {
   config: types.PriNubOptions;

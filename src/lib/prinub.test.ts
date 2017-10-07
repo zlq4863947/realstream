@@ -1,9 +1,9 @@
 import { PriNub } from './prinub';
 import * as assert from 'power-assert';
 
-const config = require('../../config/prinub');
+const config = require('../../config/config');
 
-const prinub = new PriNub(config);
+const prinub = new PriNub(config.prinub);
 
 const testGrant = async () => {
 
@@ -18,17 +18,14 @@ const testPublish = async () => {
 
   const channel = new Date().getTime().toString();
   const key = await prinub.grant(channel);
-  await new Promise(resolve => setTimeout(resolve, 1000));
   const pubkey = await prinub.publish(channel, 'test1', { result: 'ok' });
-  console.log('revoke: ' + pubkey);
+  console.log('发布key: ' + pubkey);
 };
 
 const testSubscribe = async (done: any) => {
 
   const _channel = new Date().getTime().toString();
   const key = await prinub.grant(_channel);
-  await new Promise(resolve => setTimeout(resolve, 1000));
-
   await prinub.subscribe([_channel], [key], (msg: any, channel: string) => {
     assert(channel === _channel);
     assert(msg);
@@ -36,19 +33,19 @@ const testSubscribe = async (done: any) => {
     assert(msg.params && msg.params.result === 'ok');
     console.log('message: ', msg);
   });
-  console.log('publish: ', key);
+  console.log('授权: ', key);
   await prinub.publish(_channel, 'test2', { result: 'ok' });
 
-  console.log('revoke: ', key);
+  console.log('撤销授权: ', key);
   await prinub.revoke(_channel, key);
   done();
 };
 
-describe('bb-pubnub-ts', () => {
+describe('prinub', () => {
 
-  it('should do testGrant', testGrant);
-  it('should do testPublish', testPublish);
-  it('should do testSubscribe', function (done) {
+  it('测试授权', testGrant);
+  it('测试发布', testPublish);
+  it('测试订阅', function (done) {
     testSubscribe(done);
   });
 });

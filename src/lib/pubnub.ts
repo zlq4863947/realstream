@@ -4,7 +4,7 @@ import { Log } from 'ns-common';
 
 const PUBNUB = require('pubnub');
 
-Log.init(Log.category.system, Log.level.ALL, 'ns-common');
+Log.init(Log.category.system, Log.level.ALL, 'pubnub');
 
 export class PubNub {
   private _opt: types.PubNubOptions;

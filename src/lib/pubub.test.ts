@@ -3,14 +3,14 @@ import * as types from './types';
 import * as util from 'util';
 import * as assert from 'power-assert';
 
-const config = require('../../config/pubnub');
+const config = require('../../config/config');
 
-const pubnub = new PubNub(config);
+const pubnub = new PubNub(config.pubnub);
 
 const CHANNEL = Date.now().toString();
 const testPublish = () => {
 
-  pubnub.publish(CHANNEL, { result: 'ok' });
+  pubnub.publish(CHANNEL, { result: '成功' });
 };
 
 const testSubscribe = (done: () => {}) => {
@@ -20,17 +20,17 @@ const testSubscribe = (done: () => {}) => {
   pubnub.subscribe([CHANNEL], (message: { result: string }, channel: string) => {
     assert(channel === CHANNEL);
     assert(message.result === date);
-    console.log('subscribe: ' + util.inspect(message, true, null));
+    console.log('订阅: ' + util.inspect(message, true, null));
     done();
   }).then(() =>
     pubnub.publish(CHANNEL, { result: date })
     );
 };
 
-describe('bb-pubnub-ts', () => {
+describe('pubnub', () => {
 
-  it('should do testPublish', testPublish);
-  it('should do testSubscribe', function (done) {
+  it('测试发布', testPublish);
+  it('测试订阅', function (done) {
     testSubscribe(done);
   });
 });
