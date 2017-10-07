@@ -1,10 +1,7 @@
 import * as types from './types';
 import * as crypto from 'crypto';
 import * as util from 'util';
-import { Log } from 'ns-common';
-
 const PUBNUB = require('pubnub');
-Log.init(Log.category.system, Log.level.ALL, 'prinub');
 
 class Grant {
   config: types.PriNubOptions;
@@ -109,9 +106,7 @@ export class PriNub {
 
   async grant(channel: string): Promise<string> {
     const key = await this._grant.read(channel);
-    this._grant.write(channel).catch(function (e) {
-      Log.system.error(e.stack);
-    });
+    this._grant.write(channel);
     return key;
   }
 
@@ -163,8 +158,7 @@ export class PriNub {
       const message = (msg: types.MessageAnnouncement) => {
         if (channels.some(channel => channel === msg.channel)) {
           return Promise.resolve()
-            .then(() => callback(msg.message, msg.channel, msg.timetoken))
-            .catch(e => Log.system.error(e.stack));
+            .then(() => callback(msg.message, msg.channel, msg.timetoken));
         }
       };
 
