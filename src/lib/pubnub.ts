@@ -1,10 +1,6 @@
 import * as assert from 'power-assert';
 import * as types from './types';
-import { Log } from 'ns-common';
-
 const PUBNUB = require('pubnub');
-
-Log.init(Log.category.system, Log.level.ALL, 'pubnub');
 
 export class PubNub {
   private _opt: types.PubNubOptions;
@@ -47,8 +43,7 @@ export class PubNub {
         message: (msg: types.MessageAnnouncement) =>
           channels.some(channel => channel === msg.channel) ?
             Promise.resolve()
-              .then(() => callback(msg.message, msg.channel, msg.timetoken))
-              .catch(e => Log.system.error(e.stack)) : undefined
+              .then(() => callback(msg.message, msg.channel, msg.timetoken)) : undefined
       });
       this._pubnub.subscribe({ channels });
       setTimeout(() => reject(), 3000);
