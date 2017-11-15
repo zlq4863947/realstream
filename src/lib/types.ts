@@ -15,7 +15,7 @@ export interface StatusAnnouncement {
   error: boolean,
   statusCode: number,
   category: string,
-  errorData: Object,
+  errorData: Error,
   lastTimetoken: number,
   currentTimetoken: number,
   // send back channel, channel groups that were affected by this operation

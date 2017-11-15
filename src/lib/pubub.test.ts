@@ -10,7 +10,7 @@ const pubnub = new PubNub(config.pubnub);
 const CHANNEL = Date.now().toString();
 const testPublish = () => {
 
-  pubnub.publish(CHANNEL, { result: '成功' });
+  pubnub.publish(Date.now().toString(), { result: '成功' });
 };
 
 const testSubscribe = (done: () => {}) => {

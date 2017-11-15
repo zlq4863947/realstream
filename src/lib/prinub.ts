@@ -30,15 +30,9 @@ class Grant {
     return crypto.createHmac('sha256', this.config.salt).update(channel).digest('hex');
   }
 
-  createReadAuthKey(channel: string) {
-    return new Promise((resolve, reject) =>
-      crypto.randomBytes(32, (e, buf) =>
-        e ? reject(e) : resolve(buf)
-      )).then((buf: string | Buffer) => {
-        return crypto.createHash('sha256')
-          .update(buf)
-          .digest('hex');
-      });
+  async createReadAuthKey(channel: string) {
+    const buf: string | Buffer = await crypto.randomBytes(32);
+    return await crypto.createHash('sha256').update(buf).digest('hex');
   }
 
   write(channel: string) {

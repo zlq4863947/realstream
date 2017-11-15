@@ -34,19 +34,21 @@ export class PubNub {
       )
     );
   }
-
-  subscribe(channels: string[], callback: any) {
-
-    return new Promise((resolve, reject) => {
-      this._pubnub.addListener({
-        status: (s: types.StatusAnnouncement) => s.category === 'PNConnectedCategory' ? resolve() : false,
-        message: (msg: types.MessageAnnouncement) =>
-          channels.some(channel => channel === msg.channel) ?
-            Promise.resolve()
-              .then(() => callback(msg.message, msg.channel, msg.timetoken)) : undefined
-      });
-      this._pubnub.subscribe({ channels });
-      setTimeout(() => reject(), 3000);
+  
+  async subscribe(channels: string[], callback: any) {
+    await this._pubnub.addListener({
+      status: (s: types.StatusAnnouncement) => {
+        if (s.error) {
+          throw new Error(s.errorData.stack);
+        }
+        return false;
+      },
+      message: (msg: types.MessageAnnouncement) =>
+        channels.some(channel => channel === msg.channel) ?
+          Promise.resolve()
+            .then(() => callback(msg.message, msg.channel, msg.timetoken)) : undefined
     });
+    await this._pubnub.subscribe({ channels });
+    setTimeout(() => { throw new Error('subscribe timeout') }, 3000);
   }
 }
